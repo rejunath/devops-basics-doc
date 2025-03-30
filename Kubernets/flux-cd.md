@@ -24,6 +24,56 @@
    - *Source Controller*: Responsible for monitoring changes in the source repository   whenever there is a commit
    - *Kustomize controller*: It is responsible to connect to custom repositories and custom branches on the github account for your manifest files
 
+### Commands
+- flux bootstrap github --owner=*github_user* --repository=*repo_name* --path=*path_in_repo* --personal=true --private=false
+
+  - --owner	
+     - GitHub username or organization name that owns the repository.	
+     - eg: --owner=john-doe
+  - --repository	
+     - Name of the GitHub repository to store Flux configurations. Created if it doesn’t exist.	
+     - eg: --repository=prod-cluster
+  - --path	
+     - Directory in the repo where Flux configurations are stored (e.g., Kustomize files).	
+     - eg: --path=clusters/production
+  - --personal	
+     - Set to true if the repository belongs to a personal GitHub account (default: false).	
+     - eg: --personal=true
+  - --private	
+     - Set to false to make the repository public (default: true for private repos).	--private=false
+  
+  #### Workflow Overview
+      1. Prerequisites
+        - Flux CLI installed.
+        - kubectl configured to access your Kubernetes cluster.
+        - GitHub Personal Access Token (PAT) with: repo scope *(full control of repositories)*, *admin:public_key* scope (to add deploy keys).
+
+  #### Command Execution
+       1. Cluster Setup:
+         - Installs Flux components (source-controller, kustomize-controller, etc.) in the flux-system namespace.
+         - Creates a GitRepository and Kustomization resource to sync the specified --path.
+
+  #### GitHub Interaction:
+        - Creates the repository if it doesn’t exist (public/private based on --private).
+        - Adds a deploy key to the repository for read/write access.
+        - Commits initial Flux manifests (e.g., flux-system configs) to the --path directory.
+
+  #### Post-Bootstrap
+        - Flux continuously monitors the repository and syncs changes to the cluster.
+        - Add Kubernetes manifests (YAML/Helm/Kustomize) to the --path directory to manage workloads.
+
+  #### Example Command
+        - flux bootstrap github \
+          --owner=john-doe \
+          --repository=prod-cluster \
+          --path=clusters/production \
+          --personal=true \
+          --private=false
+  #### Next Steps
+        - Add Kubernetes manifests (e.g., deployments, services) to the --path directory.
+        - Monitor sync status:
+            - flux get kustomizations
+
 ### Difference between ArgoCd and Flux CD
 - Both are working to provide continuous delivery by integrating with GIT
 - Both are providing deploying of application on kubernetes cluster each time there is commit to your repo
