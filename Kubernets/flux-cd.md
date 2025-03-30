@@ -1,14 +1,37 @@
 # Flux CD:
 
 ### what is Flux-CD
-1. Flux Cd is also a continuous deployment tool which automates deployments in kubernetes cluster as part of GITOPS
-2. It is a simple and an easy tool for integration with kubernetes cluster.
-3. As part flux CD we don't have any dashboard to display continuous deployment process
-4. It main source is GITHUB where as you will commit new images in the kubernetes manifest files → flux will pickup the updated image and deploy the new pods.
-5. In addition to github, Flux integrates with popular Git providers to simplify the initial setup of deploy keys and other authentication mechanisms:GitHub
-GitLab
-Bitbucket
-AWS CodeCommit
-Azure DevOps
-Google Cloud Source
-Oracle Cloud Git Repositories
+- Flux Cd is also a continuous deployment tool which automates deployments in kubernetes cluster as part of GITOPS
+- It is a simple and an easy tool for integration with kubernetes cluster.
+- As part flux CD we don't have any dashboard to display continuous deployment process
+- It main source is GITHUB where as you will commit new images in the kubernetes manifest files → flux will pickup the updated image and deploy the new pods.
+- In addition to github, Flux integrates with popular Git providers to simplify the initial setup of deploy keys and other authentication mechanisms:GitHub
+   - GitLab
+   - Bitbucket
+   - AWS CodeCommit
+   - Azure DevOps
+   - Google Cloud Source
+   - Oracle Cloud Git Repositories
+
+### How Flux-CD works
+- Fluc Cd monitors your repo for any change and then sync the changes with kube cluster
+- There by implementing Continuous Deployment process where as the user commits in the repo, the application is deployed.
+- Flux can connect to any github repo any branch and reconcile the changes and deploy new application
+
+### Components
+- 3 Main components of flux which has to be installed and integrated with GITHUb repo
+   - *Kubernetes API*: Responsible to complete the bootstrap process of connecting with github, creating a new repo and creating the YAML files of all the components of Flux.
+   - *Source Controller*: Responsible for monitoring changes in the source repository   whenever there is a commit
+   - *Kustomize controller*: It is responsible to connect to custom repositories and custom branches on the github account for your manifest files
+
+### Difference between ArgoCd and Flux CD
+- Both are working to provide continuous delivery by integrating with GIT
+- Both are providing deploying of application on kubernetes cluster each time there is commit to your repo
+- Both are dependent on manifests files/YAML files in github
+- In both the cases the YAML files are present in the github
+- ARGO CD comes with a versatile UI which allows you to visualize your app deployments.
+- Flux CD does not have any UI-> everything is managed via kubernetes master node
+- ArgoCD all components are present on kubernetes cluster
+- Flux CD is tightly integrated with one specific github repository where flux-system YAML field are present
+- FLux CD directly works with kubernetes API to connect to its components.
+
